@@ -9,7 +9,7 @@ body {
 .main-title h1 {
     text-align: center;
     font-size: 25px;
-    background-color: #454d55;
+    background-color: #343a40;
     padding: 10px 0;
     border-radius: 10px;
     color: white;
@@ -19,7 +19,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #454d55;
+    background-color: #343a40;
     border-radius: 10px;
     padding: 25px 0;
     width: 100%;
@@ -33,17 +33,41 @@ body {
     flex-direction: column;
 }
 
+.table-dark td, .table-dark th, .table-dark thead th {
+    border: 2px solid #454d55;
+    font-weight: bold;
+}
+
 .stats-box h1 {
     font-size: 22px;
     color: white;
+}
+
+.death {
+    color: red;
+}
+
+.liveSearch {
+    margin-top: 30px;
+}
+
+.loading {
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.recLine {
+    background-color: rgb(138, 202, 43, 0.5);
 }
 
 .recovered {
     color: #8ACA2B;
 }
 
-.death {
-    color: red;
+.deathLine {
+    background-color: rgb(255, 0, 0, 0.5);
 }
 
 .total {

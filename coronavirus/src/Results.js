@@ -11,44 +11,112 @@ class Results extends React.Component {
         deaths: [],
         recovered: [],
         countries: [],
-        loading: true
+        loading: true,
+        search: "",
     }
 
     async componentDidMount() {
-        const res = await axios.get("https://corona.lmao.ninja/v2/all");
-        const cntr = await axios.get("https://corona.lmao.ninja/v2/countries?sort=country");
-        console.log(res);
-        console.log(cntr);
-        this.setState({cases: res.data.cases});
-        this.setState({active: res.data.active});
-        this.setState({deaths: res.data.deaths});
-        this.setState({recovered: res.data.recovered});
-        this.setState({countries: cntr.data.country});
-        this.setState({loading: false});
+        // const res = await axios.get("https://corona.lmao.ninja/v2/all");
+        // const cntr = await axios.get("https://corona.lmao.ninja/v2/countries?sort=country");
+        await axios.get("https://corona.lmao.ninja/v2/all").then((response)=>{
+            this.setState({cases: response.data.cases});
+            this.setState({active: response.data.active});
+            this.setState({deaths: response.data.deaths});
+            this.setState({recovered: response.data.recovered});
+        })
+        await axios.get("https://corona.lmao.ninja/v2/countries?sort=country").then((response)=>{
+            this.setState({countries: response.data});
+            this.setState({loading: false});
+        })
+        // const {search} = this.state;
+        // //console.log(res);
+        // console.log('cntr',cntr);
+        
+        
+        // console.log("country array is ",cntr.data);
+
+        // const contry = (cntr.data);
+
+
     }
 
-    render() {
-        if(this.state.loading) {
-            return <h1>Loading...</h1>
+
+
+    onchange = e => {
+        if(e.target.value.length > 2){
+            this.setState({ search : e.target.value });
+        }else{
+            this.setState({ search : "" });
         }
+        
+        
+        if(this.state.search != ""){
+            
+            let url = "https://corona.lmao.ninja/v2/countries/"+this.state.search;   
+            axios.get(url).then((response) => {
+                console.log(response)
+                
+                this.setState({countries: [response.data]});
+                
+                this.setState({loading: false});
+    
+                const contry = (response.data);
+                console.log("searched country is: ",contry)
+            }).catch((error)=>{
+                console.log('error',error)
+            });
+        }else{
+            axios.get("https://corona.lmao.ninja/v2/countries?sort=country").then((response)=>{
+                this.setState({countries: response.data});
+                this.setState({loading: false});
+            })
+        }
+
+        
+    
+        
+    }
+
+
+    render() {
+
+        if(this.state.loading) {
+            return <h1 className="loading">Loading...</h1>
+        }
+
+        const {search} = this.state;
+        console.log("conn",this.state.countries);
+
+        // const filteredCountries = contry.filter ( country => {
+        //     return contry.country.toLowerCase().indexOf ( search.toLowerCase() ) !== -1
+        // })
+
         return (
             <div>
                 <Summary Cases = {this.state.cases} Active = {this.state.active} Deaths = {this.state.deaths} Recovered = {this.state.recovered}/>
+                <div className="container">
+                    <div className="liveSearch">
+                        <div className="input-group mb-3">
+                            <input type="text" placeholder="Filter By Country Name" className="form-control" onChange={this.onchange}></input>
+                        </div>
+                    </div>
+                </div>
                 <div className="container">
                     <table className="table table-dark">
                         <thead>
                             <tr>
                                 <th scope="col">Country</th>
                                 <th scope="col">Total Cases</th>
-                                <th scope="col">New Confirmed</th>
-                                <th scope="col">Total Recovered</th>
-                                <th scope="col">Total Deaths</th>
+                                <th scope="col">New Confirmed(24H)</th>
+                                <th scope="col" className="recLine">Total Recovered</th>
+                                <th scope="col" className="deathLine">Total Deaths</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {/* {this.state.countries.map(country => (
-                                <Countries country = {country} key={country.country} />
-                            ))} */}
+                            {this.state.countries.map(country => (
+                                <Countries countries = {country.country} cases={country.cases} todayCases= {country.todayCases} 
+                                recovered={country.recovered} deaths={country.deaths} key={country.countryInfo.id} />
+                            ))}
                         </tbody>
                     </table>
                 </div>
