@@ -16,8 +16,7 @@ class Results extends React.Component {
     }
 
     async componentDidMount() {
-        // const res = await axios.get("https://corona.lmao.ninja/v2/all");
-        // const cntr = await axios.get("https://corona.lmao.ninja/v2/countries?sort=country");
+
         await axios.get("https://corona.lmao.ninja/v2/all").then((response)=>{
             this.setState({cases: response.data.cases});
             this.setState({active: response.data.active});
@@ -28,15 +27,6 @@ class Results extends React.Component {
             this.setState({countries: response.data});
             this.setState({loading: false});
         })
-        // const {search} = this.state;
-        // //console.log(res);
-        // console.log('cntr',cntr);
-        
-        
-        // console.log("country array is ",cntr.data);
-
-        // const contry = (cntr.data);
-
 
     }
 
@@ -71,9 +61,6 @@ class Results extends React.Component {
                 this.setState({loading: false});
             })
         }
-
-        
-    
         
     }
 
@@ -85,11 +72,7 @@ class Results extends React.Component {
         }
 
         const {search} = this.state;
-        console.log("conn",this.state.countries);
 
-        // const filteredCountries = contry.filter ( country => {
-        //     return contry.country.toLowerCase().indexOf ( search.toLowerCase() ) !== -1
-        // })
 
         return (
             <div>
